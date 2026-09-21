@@ -1,5 +1,5 @@
-const app=require("./src/app")
 require("dotenv").config();
+const app=require("./src/app")
 const dns = require("dns");
 dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
