@@ -24,9 +24,11 @@ const registerUser = async (req, res) => {
     const userExists = await User.findOne({ email });
     if (userExists) return res.status(400).json({ message: 'User already exists' });
 
-    // 2. Check for admin secret
+    // 2. Check for admin secret (STRICTLY)
     let assignedRole = 'user';
-    if (adminSecret === process.env.ADMIN_SECRET) {
+    
+    // ONLY assign admin if they provided a secret, our server has a secret, and they match exactly
+    if (adminSecret && process.env.ADMIN_SECRET && adminSecret === process.env.ADMIN_SECRET) {
       assignedRole = 'admin';
     }
 
@@ -48,7 +50,7 @@ const registerUser = async (req, res) => {
         _id: user.id,
         name: user.name,
         email: user.email,
-        role: user.role, // This should now say "admin" if the secret matched!
+        role: user.role, 
       });
     } else {
       res.status(400).json({ message: 'Invalid user data' });
